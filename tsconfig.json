@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "removeComments": true,
+    "noResolve": false,
+    "noImplicitAny": true,
+    "experimentalDecorators": true
+  },
+  "compileOnSave": false,
+  "exclude": [
+    "dist",
+    "node_modules",
+    "libs"
+  ],
+  "filesGlob": [
+    "typings/**/*.d.ts",
+    "src/**/*.ts"
+  ],
+  "files": [
+    "typings/globals/lodash/index.d.ts",
+    "typings/globals/screeps/index.d.ts",
+    "typings/index.d.ts",
+    "src/components/creeps/creepAction.ts",
+    "src/components/creeps/creepManager.ts",
+    "src/components/creeps/harvester.ts",
+    "src/components/rooms/roomManager.ts",
+    "src/components/sources/sourceManager.ts",
+    "src/components/spawns/spawnManager.ts",
+    "src/config/config.ts",
+    "src/main.ts",
+    "src/shared/memoryManager.ts"
+  ]
+}
