@@ -1,42 +1,36 @@
-// Upgrader logic, go to nearest source and collect energy, then upgrade controller
-import { ErrorMapper } from 'utils/ErrorMapper';
+// Upgrader role
 
+export var roleUpgrader = {
+    // upgrade controller
+    run: function(creep: Creep) {
+        if (creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.upgrading = false;
+            creep.say('🔄 harvest');
+        }
+        if (!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) {
+            creep.memory.upgrading = true;
+            creep.say('⚡ upgrade');
+        }
 
-export const upgrader = ErrorMapper.wrapLoop(() => {
-    // Harvest energy. If working = true then go to nearest controller and upgrade it
-    for (const name in Game.creeps) {
-        const creep = Game.creeps[name];
-        if (creep.memory.role == "upgrader") {
-            if (creep.memory.working == false) {
-                const sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0]);
-                }
-                else {
-                    // harvest energy
-                    creep.harvest(sources[0]);
-                    // if full go to nearest controller and upgrade it
-                    if (creep.carry.energy == creep.carryCapacity) {
-                        creep.memory.working = true;
-                    }
+        if (creep.memory.upgrading) {
+            const controller = creep.room.controller;
+            if (controller){
+                if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(controller, { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             }
-            else {
-                const controller = creep.room.controller;
-                if (controller != undefined) {
-                    if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(controller);
-                    }
-                    else {
-                        // upgrade controller
-                        creep.upgradeController(controller);
-                        // if empty go to nearest source and harvest it
-                        if (creep.carry.energy == 0) {
-                            creep.memory.working = false;
-                        }
-                    }
+        } else {
+
+            const droppedEnergy = creep.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => resource.resourceType == RESOURCE_ENERGY
+            })
+
+            const closestDroppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
+            if (closestDroppedEnergy) {
+                if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
                 }
             }
         }
     }
-});
+};

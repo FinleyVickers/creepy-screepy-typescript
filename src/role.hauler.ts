@@ -1,43 +1,28 @@
-// Hauler role logic. Move energy from harvesters and builders to containers.
+// Hauler role
 
-import { ErrorMapper } from 'utils/ErrorMapper';
-
-
-export const hauler = ErrorMapper.wrapLoop(() => {
-    // if working = true then go to nearest builder/harvester and harvest it, if not then go to nearest container and transfer energy
-    for (const name in Game.creeps) {
-        const creep = Game.creeps[name];
-        if (creep.memory.role == "hauler") {
-            if (creep.memory.working == false) {
-                const sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0]);
+export var roleHauler = {
+    // go to dropped resources and pickup, if full then go to spawn and drop off resources. If spawn is full stay at spawn
+    run: function(creep: Creep) {
+        if(creep.memory.role == 'hauler') {
+            // find closest dropped resource
+            const droppedResources = creep.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => resource.resourceType == RESOURCE_ENERGY
+            });
+            const closestDroppedEnergy= creep.pos.findClosestByRange(droppedResources);
+            if (creep.store.getFreeCapacity() > 0 && closestDroppedEnergy) {
+                if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
                 }
-                else {
-                    // harvest energy
-                    creep.harvest(sources[0]);
-                    creep.memory.working = true;
-                }
-            }
-            else {
-                // if full go to nearest container and transfer energy
-                if (creep.carry.energy == creep.carryCapacity) {
-                    const containers = creep.room.find(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_CONTAINER) &&
-                                structure.store[RESOURCE_ENERGY] < structure.storeCapacity;
-                        }
-                    });
-                    if (containers.length > 0) {
-                        if (creep.transfer(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(containers[0]);
-                        }
+            } else {
+                const spawns = creep.room.find(FIND_MY_SPAWNS)
+
+                const closestSpawn = creep.pos.findClosestByRange(spawns)
+                if (closestSpawn) {
+                    if (creep.transfer(closestSpawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(closestSpawn, { visualizePathStyle: { stroke: '#ffaa00' } });
                     }
-                }
-                else {
-                    creep.memory.working = false;
                 }
             }
         }
     }
-});
+};
