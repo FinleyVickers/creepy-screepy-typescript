@@ -1,14 +1,28 @@
-import { spawner } from "spawner";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { roleHarvester } from "role.harvester";
 import { roleUpgrader } from "role.upgrader";
 import { roleHauler } from "role.hauler";
+import { roleBuilder } from "role.builder";
+import { roleRepairer } from "role.repairer";
 
+declare global {
+  interface CreepMemory {
+    role: string;
+    upgrading?: boolean;
+    working?: boolean;
+    building?: boolean;
+    repairing?: boolean;
+  }
+}
+
+
+// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
+// This utility uses source maps to get the line numbers and file names of the original, TS source code
 const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 const haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler');
 const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
-// This utility uses source maps to get the line numbers and file names of the original, TS source code
+const builders = _.filter(Game.creeps, creep => creep.memory.role == 'builder');
+const repairers = _.filter(Game.creeps, creep => creep.memory.role == 'repairer');
 export const loop = ErrorMapper.wrapLoop(() => {
   // Automatically delete memory of missing creeps
   for (const name in Memory.creeps) {
@@ -31,6 +45,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
     var newName = 'Upgrader' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, MOVE], newName , {
       memory: {role: 'upgrader', upgrading: false}
+    });
+  } else if (builders.length < 2) {
+    var newName = 'Builder' + Game.time;
+    Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, MOVE], newName, {
+      memory: {role: 'builder', building: false}
+    });
+  } else if (repairers.length < 2) {
+    var newName = 'Repairer' + Game.time;
+    Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, MOVE], newName, {
+      memory: {role: 'repairer', repairing: false}
     });
   }
 
@@ -59,6 +83,16 @@ for (var name in Game.creeps) {
   if (creep.memory.role == 'hauler') {
 
       roleHauler.run(creep);
+      continue
+  }
+  if (creep.memory.role == 'builder') {
+
+      roleBuilder.run(creep);
+      continue
+  }
+  if (creep.memory.role == 'repairer') {
+
+      roleRepairer.run(creep);
       continue
   }
 }
