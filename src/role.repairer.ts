@@ -25,10 +25,16 @@ export var roleRepairer = {
                 }
             }
         } else {
-            // harvest energy from source
-            const sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
+            // harvest energy from dropped energy
+            const droppedEnergy = creep.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => resource.resourceType == RESOURCE_ENERGY
+            })
+            // find closest dropped energy
+            const closestDroppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
+            if (closestDroppedEnergy) {
+                if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
+                }
             }
         }
     }
