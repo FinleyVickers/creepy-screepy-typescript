@@ -4,7 +4,7 @@ import { roleUpgrader } from "role.upgrader";
 import { roleHauler } from "role.hauler";
 import { roleBuilder } from "role.builder";
 import { roleRepairer } from "role.repairer";
-
+import { construction } from "constructionManager";
 
 declare global {
   interface CreepMemory {
@@ -43,12 +43,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
     Game.spawns['Spawn1'].spawnCreep([CARRY, MOVE, CARRY, MOVE], newName, {
       memory: {role: 'hauler'}
     });
-  } else if (upgraders.length < 2) {
+  } else if (upgraders.length < 4) {
     var newName = 'Upgrader' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, MOVE], newName , {
       memory: {role: 'upgrader', upgrading: false}
     });
-  } else if (builders.length < 2) {
+  } else if (builders.length < 4) {
     var newName = 'Builder' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, {
       memory: {role: 'builder', building: false}
@@ -72,6 +72,7 @@ for (var name in Game.creeps) {
   if (creep.memory.role == 'upgrader') {
 
       roleUpgrader.run(creep);
+      //construction.findPaths(creep);
       continue
   }
   if (creep.memory.role == 'hauler') {
@@ -90,6 +91,5 @@ for (var name in Game.creeps) {
       continue
   }
 }
-
 
 });
