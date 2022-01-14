@@ -1,10 +1,11 @@
 import { ErrorMapper } from "utils/ErrorMapper";
-import { roleHarvester } from "role.harvester";
-import { roleUpgrader } from "role.upgrader";
-import { roleHauler } from "role.hauler";
-import { roleBuilder } from "role.builder";
-import { roleRepairer } from "role.repairer";
+import { roleHarvester } from "roles/role.harvester";
+import { roleUpgrader } from "roles/role.upgrader";
+import { roleHauler } from "roles/role.hauler";
+import { roleBuilder } from "roles/role.builder";
+import { roleRepairer } from "roles/role.repairer";
 import { construction } from "constructionManager";
+
 
 declare global {
   interface CreepMemory {
@@ -32,7 +33,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
       delete Memory.creeps[name];
     }
   }
-
   if (harvesters.length < 2) {
     var newName = 'Harvester' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, WORK, MOVE], newName, {
@@ -48,7 +48,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, MOVE], newName , {
       memory: {role: 'upgrader', upgrading: false}
     });
-  } else if (builders.length < 4) {
+  } else if (builders.length < 3) {
     var newName = 'Builder' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, {
       memory: {role: 'builder', building: false}
