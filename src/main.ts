@@ -5,6 +5,7 @@ import { roleHauler } from "roles/role.hauler";
 import { roleBuilder } from "roles/role.builder";
 import { roleRepairer } from "roles/role.repairer";
 import { construction } from "constructionManager";
+import { Tower } from "roles/tower";
 
 
 declare global {
@@ -33,6 +34,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       delete Memory.creeps[name];
     }
   }
+
+
   if (harvesters.length < 2) {
     var newName = 'Harvester' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, WORK, MOVE], newName, {
@@ -91,5 +94,4 @@ for (var name in Game.creeps) {
       continue
   }
 }
-
 });

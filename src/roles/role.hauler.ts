@@ -15,11 +15,18 @@ export var roleHauler = {
                 }
             } else {
                 const spawns = creep.room.find(FIND_MY_SPAWNS)
-
+                const extensions = creep.room.find(FIND_MY_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_EXTENSION ||
+                            structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                            || structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    }
+                });
+                const closestExtension = creep.pos.findClosestByRange(extensions);
                 const closestSpawn = creep.pos.findClosestByRange(spawns)
-                if (closestSpawn) {
-                    if (creep.transfer(closestSpawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(closestSpawn, { visualizePathStyle: { stroke: '#ffaa00' } });
+                if (closestExtension) {
+                    if (creep.transfer(closestExtension, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(closestExtension, { visualizePathStyle: { stroke: '#ffaa00' } });
                     }
                 }
             }
