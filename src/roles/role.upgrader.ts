@@ -20,7 +20,6 @@ export var roleUpgrader = {
                 }
             }
         } else {
-
             const droppedEnergy = creep.room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => resource.resourceType == RESOURCE_ENERGY
             })
