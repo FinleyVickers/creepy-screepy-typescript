@@ -5,8 +5,7 @@ import { roleHauler } from "roles/role.hauler";
 import { roleBuilder } from "roles/role.builder";
 import { roleRepairer } from "roles/role.repairer";
 import { construction } from "constructionManager";
-import { Tower } from "roles/tower";
-
+import { Tower } from "roles/tower"
 
 declare global {
   interface CreepMemory {
@@ -35,6 +34,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  var hostiles = Game.rooms['E32N9'].find(FIND_HOSTILE_CREEPS);
+  if (hostiles.length > 0) {
+    Tower.defendRoom
+  } else {
+    Tower.repair
+  }
 
   if (harvesters.length < 2) {
     var newName = 'Harvester' + Game.time;
