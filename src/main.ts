@@ -4,6 +4,7 @@ import { roleUpgrader } from "roles/role.upgrader";
 import { roleHauler } from "roles/role.hauler";
 import { roleBuilder } from "roles/role.builder";
 import { roleRepairer } from "roles/role.repairer";
+import { TowerStuff } from "./roles/tower";
 
 declare global {
   interface CreepMemory {
@@ -99,7 +100,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  let room = Game.spawns['Spawn1'].room;
+  let towers: StructureTower[] = room.find(FIND_MY_STRUCTURES, {
+    filter: (structure) => {
+      return (structure.structureType == STRUCTURE_TOWER);
+    }
+  });
 
+  for (const tower in towers) {
+    TowerStuff(room, towers[tower])
+  }
 
 /*
   var hostiles = Game.rooms['E32N9'].find(FIND_HOSTILE_CREEPS);
