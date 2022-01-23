@@ -10,7 +10,7 @@ export var roleBuilder = {
 
         if (!creep.memory.building && creep.store.getFreeCapacity() == 0) {
             creep.memory.building = true;
-            creep.say('🛠️ building')
+            creep.say('🛠️ build')
         }
 
         if (creep.memory.building) {
