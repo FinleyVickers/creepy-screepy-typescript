@@ -16,7 +16,7 @@ export var roleUpgrader = {
             const controller = creep.room.controller;
             if (controller){
                 if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(controller, { visualizePathStyle: { stroke: '#ffffff' } });
+                    creep.moveTo(controller, { visualizePathStyle: { stroke: '#ffffff' }, reusePath: 50});
                 }
             }
         } else {
@@ -27,7 +27,7 @@ export var roleUpgrader = {
             const closestDroppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
             if (closestDroppedEnergy) {
                 if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 50});
                 }
             }
         }

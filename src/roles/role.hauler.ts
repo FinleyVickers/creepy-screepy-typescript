@@ -11,7 +11,7 @@ export var roleHauler = {
             const closestDroppedEnergy= creep.pos.findClosestByRange(droppedResources);
             if (creep.store.getFreeCapacity() > 0 && closestDroppedEnergy) {
                 if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 25});
                 }
             } else {
                 const extensions = creep.room.find(FIND_MY_STRUCTURES, {
@@ -25,7 +25,7 @@ export var roleHauler = {
                 const closestExtension = creep.pos.findClosestByRange(extensions);
                 if (closestExtension) {
                     if (creep.transfer(closestExtension, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(closestExtension, { visualizePathStyle: { stroke: '#ffaa00' } });
+                        creep.moveTo(closestExtension, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 50 });
                     }
                 }
             }

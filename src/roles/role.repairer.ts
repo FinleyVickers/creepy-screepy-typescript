@@ -21,7 +21,7 @@ export var roleRepairer = {
             const closestDamagedStructure = creep.pos.findClosestByRange(damagedStructures);
             if (closestDamagedStructure) {
                 if (creep.repair(closestDamagedStructure) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDamagedStructure);
+                    creep.moveTo(closestDamagedStructure, {reusePath: 50});
                 }
             }
         } else {
@@ -33,7 +33,7 @@ export var roleRepairer = {
             const closestDroppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
             if (closestDroppedEnergy) {
                 if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 20});
                 }
             }
         }

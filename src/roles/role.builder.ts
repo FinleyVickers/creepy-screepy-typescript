@@ -18,7 +18,7 @@ export var roleBuilder = {
             const constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES);
             if (constructionSites.length) {
                 if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(constructionSites[0]);
+                    creep.moveTo(constructionSites[0], {reusePath: 20});
                 }
             }
         } else {
@@ -30,7 +30,7 @@ export var roleBuilder = {
             const closestDroppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
             if (closestDroppedEnergy) {
                 if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' } });
+                    creep.moveTo(closestDroppedEnergy, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 20, ignoreCreeps: true });
                 }
             }
         }
