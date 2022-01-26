@@ -20,6 +20,20 @@ export var roleBuilder = {
                 if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSites[0], {reusePath: 20});
                 }
+            } else {
+                // find repair sites
+                const repairSites = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_WALL ||
+                            structure.structureType == STRUCTURE_RAMPART) &&
+                            structure.hits < structure.hitsMax;
+                    }
+                });
+                if (repairSites.length) {
+                    if (creep.repair(repairSites[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(repairSites[0], {reusePath: 20});
+                    }
+                }
             }
         } else {
             // harvest dropped energy

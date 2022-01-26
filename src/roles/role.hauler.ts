@@ -16,17 +16,28 @@ export var roleHauler = {
             } else {
                 const extensions = creep.room.find(FIND_MY_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_EXTENSION ||
+                        return (structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 ||
                             structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                            || structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                            || structure.structureType == STRUCTURE_STORAGE && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            || structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            //|| structure.structureType == STRUCTURE_STORAGE && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     }
                 });
                 const closestExtension = creep.pos.findClosestByRange(extensions);
+                const storage = creep.room.find(FIND_MY_STRUCTURES, {
+                  filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_STORAGE && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
+                  }
+                });
+                const closestStorage = creep.pos.findClosestByRange(storage);
                 if (closestExtension) {
                     if (creep.transfer(closestExtension, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestExtension, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 50 });
                     }
+                }
+                else if (closestStorage){
+                  if (creep.transfer(closestStorage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestStorage, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 50 });
+                  }
                 }
             }
         }

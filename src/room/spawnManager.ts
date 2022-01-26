@@ -26,7 +26,7 @@ export function spawnManager() {
     Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, {
       memory: {role: 'builder', building: false}
     });
-  } else if (repairers.length < 4) {
+  } else if (repairers.length < 6) {
     newName = 'Repairer' + Game.time;
     Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, {
       memory: {role: 'repairer', repairing: false}
