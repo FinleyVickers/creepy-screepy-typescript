@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "push-main",
+			"problemMatcher": [],
+			"label": "npm: push-main",
+			"detail": "rollup -c --environment DEST:main",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

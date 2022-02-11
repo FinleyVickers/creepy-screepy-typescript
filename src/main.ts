@@ -1,7 +1,8 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 import { TowerStuff } from "./roles/tower";
 import { spawnManager } from "./room/spawnManager";
-import {creepRole} from "./roles/creepManager";
+import { creepRole } from "./roles/creepManager";
+import { PixelMake } from "./Global/pixelGen"
 
 declare global {
   interface CreepMemory {
@@ -45,4 +46,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
   for (const tower in towers) {
     TowerStuff(room, towers[tower])
   }
+
+  PixelMake()
 });
