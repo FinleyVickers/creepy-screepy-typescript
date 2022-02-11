@@ -1,8 +1,9 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 import { TowerStuff } from "./roles/tower";
-import { spawnManager } from "./room/spawnManager";
+import { SpawnInCreep } from "./room/spawnManager";
 import { creepRole } from "./roles/creepManager";
 import { PixelMake } from "./Global/pixelGen"
+import { generalFuncs } from "Global/globalFuncs";
 
 declare global {
   interface CreepMemory {
@@ -26,9 +27,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       delete Memory.creeps[name];
     }
   }
-
   if (Game.time %10 == 0) {
-    spawnManager();
+    SpawnInCreep(generalFuncs.room, Game.spawns.Spawn1);
   }
 
   for (let name in Game.creeps) {
