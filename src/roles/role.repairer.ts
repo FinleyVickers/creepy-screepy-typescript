@@ -19,9 +19,23 @@ export var roleRepairer = {
                 filter: (structure) => structure.hits < structure.hitsMax * 0.8
             });
             const closestDamagedStructure = creep.pos.findClosestByRange(damagedStructures);
+            const constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES);
             if (closestDamagedStructure) {
                 if (creep.repair(closestDamagedStructure) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestDamagedStructure, {reusePath: 50});
+                }
+            } else if (constructionSites){
+                if (constructionSites.length) {
+                    if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(constructionSites[0], {reusePath: 20});
+                    }
+                }
+            } else {
+                const sources = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE)
+                if (sources) {
+                    if (creep.harvest(sources) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(sources, { visualizePathStyle: { stroke: '#ffaa00' }, reusePath: 50 });
+                    }
                 }
             }
         } else {

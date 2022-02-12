@@ -3,10 +3,11 @@ import { generalFuncs } from "Global/globalFuncs";
 /* This code is to find out how many parts a creep should have for their select role */
 import internal from "stream"
 
-export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
+export function SpawnInCreep() {
 
     // Getting the amount of creeps in the room
-
+    var room = generalFuncs.room;
+    var spawn = Game.spawns.Spawn1;
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester')
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader')
     var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer')
@@ -42,19 +43,19 @@ export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
         SpawnInHarvester(spawnEnergyAvailable)
     }
 
-    if (upgraders.length < 5) {
+    if (upgraders.length < 5 && harvesters.length > 1) {
         SpawnInUpgrader(spawnEnergyAvailable)
     }
 
-    if (haulers.length < 3) {
+    if (haulers.length < 3 && harvesters.length > 1) {
         SpawnInHauler(spawnEnergyAvailable)
     }
 
-    if (constructionSites?.length && builders.length < 3) {
+    if (constructionSites?.length && builders.length < 3 && harvesters.length > 1) {
         SpawnInBuilder(spawnEnergyAvailable)
     }
 
-    if (repairers.length < 2) {
+    if (repairers.length < 2 && harvesters.length > 1) {
         SpawnInRepairer(spawnEnergyAvailable)
     }
 
@@ -145,7 +146,7 @@ export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
 
         //spawing in Upgrader
         var newName = 'Upgrader(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'upgrader' } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'upgrader', upgrading: false } })
         return
     }
 
@@ -204,7 +205,7 @@ export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
 
         //spawing in Upgrader
         var newName = 'Builder(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'builder' } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'builder', building: false } })
         return
     }
 
@@ -284,7 +285,7 @@ export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
 
         //spawing in Upgrader
         var newName = 'Repairer(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'repairer' } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'repairer', repairing: false } })
         return
     }
 

@@ -28,7 +28,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
   if (Game.time %10 == 0) {
-    SpawnInCreep(generalFuncs.room, Game.spawns.Spawn1);
+    SpawnInCreep();
   }
 
   for (let name in Game.creeps) {
