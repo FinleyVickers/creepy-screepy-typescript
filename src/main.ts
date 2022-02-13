@@ -1,51 +1,52 @@
-import { ErrorMapper } from "utils/ErrorMapper";
-import { TowerStuff } from "./roles/tower";
-import { SpawnInCreep } from "./room/spawnManager";
-import { creepRole } from "./roles/creepManager";
-import { PixelMake } from "./Global/pixelGen"
-import { generalFuncs } from "Global/globalFuncs";
+// These are global type declarations
+
+import { PixelMake } from "international/pixelMarket"
+import { roomFuctions } from "room/roomManager"
+
 
 declare global {
-  interface CreepMemory {
-    role: string;
-    upgrading?: boolean;
-    working?: boolean;
-    building?: boolean;
-    repairing?: boolean;
-  }
+    
+    interface Memory {
+        chosenBuildEnergy: Id<Resource<ResourceConstant>>
+        chosenBuildContainer: Id<StructureContainer>
+
+
+    }
+
+    interface RoomMemory {
+        chosenBuildID: Id<ConstructionSite>
+        spawnContainerID: Id<StructureContainer>
+
+        path1: PathStep[]
+        path2: PathStep[]
+
+        spawnContainerPosition: RoomPosition
+
+        roomController: StructureController
+    }
+
+    interface CreepMemory {
+        role: string
+        building?: boolean
+        hauling?: boolean
+        repairing?: boolean
+        upgrading?: boolean
+        harvesting?: boolean
+    }
+
+    // Syntax for adding proprties to `global` (ex "global.log")
+    namespace NodeJS {
+        interface Global {
+
+        }
+    }
 }
 
+export const loop = function () {
 
-// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
-// This utility uses source maps to get the line numbers and file names of the original, TS source code
+    roomFuctions()
 
-export const loop = ErrorMapper.wrapLoop(() => {
+    PixelMake()
 
-  // Automatically delete memory of missing creeps
-  for (const name in Memory.creeps) {
-    if (!(name in Game.creeps)) {
-      delete Memory.creeps[name];
-    }
-  }
-  if (Game.time %10 == 0) {
-    SpawnInCreep();
-  }
-
-  for (let name in Game.creeps) {
-    const creep = Game.creeps[name];
-    creepRole(creep);
-  }
-
-  let room = Game.spawns['Spawn1'].room;
-  let towers: StructureTower[] = room.find(FIND_MY_STRUCTURES, {
-    filter: (structure) => {
-      return (structure.structureType == STRUCTURE_TOWER);
-    }
-  });
-
-  for (const tower in towers) {
-    TowerStuff(room, towers[tower])
-  }
-
-  PixelMake()
-});
+    // This is the main loop
+}

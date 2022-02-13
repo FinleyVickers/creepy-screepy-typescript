@@ -1,29 +1,15 @@
-import { generalFuncs } from "Global/globalFuncs";
-
 /* This code is to find out how many parts a creep should have for their select role */
-import internal from "stream"
 
-export function SpawnInCreep() {
+export function SpawnInCreep(room: Room, spawn: StructureSpawn) {
 
     // Getting the amount of creeps in the room
-    var room = generalFuncs.room;
-    var spawn = Game.spawns.Spawn1;
+
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester')
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader')
     var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer')
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder')
     var haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler')
-    let constructionSites = generalFuncs.room?.find(FIND_CONSTRUCTION_SITES);
-    let damagedStructures = generalFuncs.room?.find(FIND_STRUCTURES, {
-      // filter: (structure) => structure.hits < structure.hitsMax
-      filter: (structure) => structure.hits < structure.hitsMax * 0.8
-    });
-
-    // getting the energy structures
-
-    const spawnStructuresExtention: StructureExtension[] = room.find(FIND_MY_STRUCTURES, {
-        filter: { structureType: StructureExtension }
-    })
+    let constructionSites = room.find(FIND_CONSTRUCTION_SITES);
 
     // getting how much energy is available
 
@@ -39,25 +25,26 @@ export function SpawnInCreep() {
 
     // if the amount of creeps for each role is less than 2 spawn in a new one
 
-    if (harvesters.length < 3) {
+    if (harvesters.length < 2) {
         SpawnInHarvester(spawnEnergyAvailable)
     }
 
-    if (upgraders.length < 5 && harvesters.length > 1) {
+    if (upgraders.length < 4) {
         SpawnInUpgrader(spawnEnergyAvailable)
     }
 
-    if (haulers.length < 3 && harvesters.length > 1) {
+    if (haulers.length < 3) {
         SpawnInHauler(spawnEnergyAvailable)
     }
 
-    if (constructionSites?.length && builders.length < 3 && harvesters.length > 1) {
+    if (constructionSites != null && builders.length < 5) {
         SpawnInBuilder(spawnEnergyAvailable)
     }
 
-    if (repairers.length < 2 && harvesters.length > 1) {
+    if (repairers.length < 2) {
         SpawnInRepairer(spawnEnergyAvailable)
     }
+
 
     // function to spawn in harvesters
 
@@ -86,6 +73,7 @@ export function SpawnInCreep() {
         // spawning in the creep
         var newName = 'Harvester(T' + numberOfParts + ')' + Game.time
         spawn.spawnCreep(body, newName, { memory: { role: 'harvester' } })
+        console.log('Spawning new: ' + newName)
     }
 
     function SpawnInUpgrader(energy: number) {
@@ -104,7 +92,7 @@ export function SpawnInCreep() {
 
         var energytogive = energy - 300
 
-        while (energytogive > 0) {
+        while (energytogive > 49) {
             if (energytogive >= 100) {
                 body.extraParts.push(WORK)
                 body.tier += 1
@@ -146,7 +134,8 @@ export function SpawnInCreep() {
 
         //spawing in Upgrader
         var newName = 'Upgrader(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'upgrader', upgrading: false } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'upgrader' } })
+        console.log('Spawning new: ' + newName)
         return
     }
 
@@ -163,7 +152,7 @@ export function SpawnInCreep() {
 
         var energytogive = energy - 300
 
-        while (energytogive > 0) {
+        while (energytogive > 49) {
             if (energytogive >= 100) {
                 body.extraParts.push(WORK)
                 body.tier += 1
@@ -205,7 +194,8 @@ export function SpawnInCreep() {
 
         //spawing in Upgrader
         var newName = 'Builder(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'builder', building: false } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'builder' } })
+        console.log('Spawning new: ' + newName)
         return
     }
 
@@ -226,11 +216,13 @@ export function SpawnInCreep() {
 
         var newName = 'Hauler(T' + (numberOfParts + 3) + ')' + Game.time
         spawn.spawnCreep(body, newName, { memory: { role: 'hauler' } })
+        console.log('Spawning new: ' + newName)
+        return
     }
 
     function SpawnInRepairer(energy: number) {
 
-        if (energy < 300) {
+        if (energy < 400) {
             return
         }
 
@@ -241,9 +233,9 @@ export function SpawnInCreep() {
             tier: 0
         }
 
-        var energytogive = energy - 300
+        var energytogive = energy - 400
 
-        while (energytogive > 0) {
+        while (energytogive > 49) {
             if (energytogive >= 100) {
                 body.extraParts.push(WORK)
                 body.tier += 1
@@ -285,7 +277,7 @@ export function SpawnInCreep() {
 
         //spawing in Upgrader
         var newName = 'Repairer(T' + body.tier + ')' + Game.time
-        spawn.spawnCreep(newBody, newName, { memory: { role: 'repairer', repairing: false } })
+        spawn.spawnCreep(newBody, newName, { memory: { role: 'repairer' } })
         return
     }
 

@@ -1,3 +1,6 @@
+/*
+This script is here to make some passive income from market
+*/
 
 export function PixelMake()
 {
